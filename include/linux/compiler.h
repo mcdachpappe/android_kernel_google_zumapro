@@ -216,6 +216,10 @@ static inline void *offset_to_ptr(const int *off)
 
 #endif /* __ASSEMBLY__ */
 
+#ifndef __noreorder
+#define __noreorder
+#endif
+
 #ifdef CONFIG_64BIT
 #define ARCH_SEL(a,b) a
 #else
