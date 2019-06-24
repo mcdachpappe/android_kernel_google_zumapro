@@ -100,6 +100,7 @@
 #include <linux/tick.h>
 #include <linux/cpufreq_times.h>
 #include <linux/dma-buf.h>
+#include <linux/simple_lmk.h>
 
 #include <asm/pgalloc.h>
 #include <linux/uaccess.h>
@@ -1308,6 +1309,7 @@ static inline void __mmput(struct mm_struct *mm)
 	if (mm->binfmt)
 		module_put(mm->binfmt->module);
 	lru_gen_del_mm(mm);
+	simple_lmk_mm_freed(mm);
 	mmdrop(mm);
 }
 
