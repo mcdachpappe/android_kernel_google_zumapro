@@ -1,0 +1,4 @@
+[submodule "KernelSU"]
+	path = KernelSU
+	url = https://github.com/mcdachpappe/android_kernel_google_zumapro.git
+	branch = KernelSU/12033-mcd
