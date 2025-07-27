@@ -1,0 +1,116 @@
+COPTS = [
+    "-Wall",
+    "-Werror",
+    "-Wno-macro-redefined",
+    "-Wno-missing-field-initializers",
+    "-Wno-sign-compare",
+    "-Wno-unused-parameter",
+]
+
+cc_library(
+    name = "libfdt",
+    srcs = glob([
+        "libfdt/*.h",
+        "libfdt/*.c",
+    ]),
+    copts = COPTS,
+    includes = ["libfdt"],
+)
+
+genrule(
+    name = "dtc_lexer_srcs",
+    srcs = ["dtc-lexer.l"],
+    outs = ["dtc-lexer.lex.c"],
+    cmd = "lex -o $@ $<",
+)
+
+genrule(
+    name = "dtc_parser_srcs",
+    srcs = ["dtc-parser.y"],
+    outs = [
+        "dtc-parser.c",
+        "dtc-parser.h",
+    ],
+    cmd = "bison -d -o $(location dtc-parser.c) $(location dtc-parser.y)",
+)
+
+UTILS = [
+    "util.c",
+    "util.h",
+    ":version_gen_header",
+]
+
+genrule(
+    name = "version_gen_header",
+    outs = ["version_gen.h"],
+    srcs = [
+        "METADATA",
+        "METADATA_version.sed",
+        "version_gen.h.in",
+    ],
+    cmd = """
+      version="$$(sed -f $(location METADATA_version.sed) -n $(location METADATA))-Android-build"
+      sed s/@VCS_TAG@/$${version}/ $(location version_gen.h.in) > $@
+    """,
+)
+
+cc_binary(
+    name = "dtc",
+    srcs = UTILS + [
+        ":dtc_lexer_srcs",
+        ":dtc_parser_srcs",
+        "checks.c",
+        "data.c",
+        "dtc.c",
+        "dtc.h",
+        "flattree.c",
+        "fstree.c",
+        "livetree.c",
+        "srcpos.c",
+        "srcpos.h",
+        "treesource.c",
+    ],
+    copts = COPTS,
+    defines = ["NO_YAML"],
+    deps = [":libfdt"],
+)
+
+cc_binary(
+    name = "fdtget",
+    srcs = UTILS + [
+        "fdtget.c",
+    ],
+    copts = COPTS,
+    defines = ["NO_YAML"],
+    deps = [":libfdt"],
+)
+
+cc_binary(
+    name = "fdtput",
+    srcs = UTILS + [
+        "fdtput.c",
+    ],
+    copts = COPTS,
+    defines = ["NO_YAML"],
+    deps = [":libfdt"],
+)
+
+cc_binary(
+    name = "fdtdump",
+    srcs = UTILS + [
+        "fdtdump.c",
+    ],
+    copts = COPTS,
+    defines = ["NO_YAML"],
+    deps = [":libfdt"],
+)
+
+cc_binary(
+    name = "fdtoverlay",
+    srcs = UTILS + [
+        "fdtoverlay.c",
+    ],
+    copts = COPTS,
+    defines = ["NO_YAML"],
+    deps = [":libfdt"],
+)
