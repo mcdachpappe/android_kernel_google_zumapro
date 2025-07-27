@@ -1,0 +1,81 @@
+// SPDX-License-Identifier: GPL-2.0-only
+/*
+ * Battery device tree entries specific to panther
+ *
+ * Copyright 2023 Google,LLC
+ *
+ */
+
+&google_battery {
+	google,chg-battery-capacity = <4942>;
+
+	google,chg-cv-limits = <4200000 4250000 4300000 4350000 4480000>;
+	google,chg-temp-limits = <0 100 200 420 460 480 550>;
+	google,chg-cc-limits = <
+		 50   30   30    0   0
+		100  100  100   50  50
+		150  150  150  150  50
+		150  150   50   50  50
+		 50   50   50    0   0
+		 30    0    0    0   0
+	>;
+
+	google,aact-cv-limits = <4200000 4250000 4300000 4350000 4480000>;
+	google,aact-temp-limits = <0 100 200 420 460 480 550>;
+	google,chg-aact-ecc = <0 300 1000>;
+	google,aact-cc-limits = <
+		 50   30   30    0   0
+		100  100  100   50  50
+		150  150  150  150  50
+		150  150   50   50  50
+		 50   50   50    0   0
+		 30    0    0    0   0
+		 50   30   30    0   0
+		100  100  100   50  50
+		140  140  140  140  50
+		140  140   50   50  50
+		 50   50   50    0   0
+		 30    0    0    0   0
+		 50   30   30    0   0
+		100  100  100   50  50
+		120  120  120  120  50
+		120  120   50   50  50
+		 50   50   50    0   0
+		 30    0    0    0   0
+	>;
+
+	google,chg-topoff-limits = <250 250 250 500 500 500>;
+
+	google,pullback-current;
+
+	google,ttf-temp-idx= <2>;
+	google,ttf-adapter = <4500>;
+	google,ttf-soc-table =  <52 72 85 89 93  95  97  100>;
+	google,ttf-elap-table = <24 47 65 82 121 170 222 116>;
+	google,ttf-tier-table = <0 51 76>;
+	google,ttf-report-max-ratio = <0>;
+
+	google,batt-id-1-atl {
+		google,batt-id = <1>;
+		google,aacr-ref-cycles = <100 200 300 400 500 600 700 800 900 1000>;
+		google,aacr-ref-fade10 = <  1   8  15  22  27  38  45  53  62   69>;
+		google,aafv-ref-cycles = <
+			200  250  300  350  400  450  500  550
+			600  650  700  750  800  850  900  950
+		>;
+		google,aafv-ref-offset = <
+			  0  10  10  20  20  30  30  40
+			 40  50  50  60  60  70  80  90
+		>;
+	};
+};
+
+&max77779_fg {
+	maxim,fg-data {
+#ifdef ZUMA_BMS_PROTO_EVT10_MODEL
+		#include "zuma-komodo-proto-evt10-battery-data.dtsi"
+#else
+		#include "zuma-komodo-battery-data.dtsi"
+#endif
+	};
+};
