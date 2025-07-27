@@ -1,0 +1,47 @@
+package {
+    // See: http://go/android-license-faq
+    //   SPDX-license-identifier-BSD-2-Clause
+    default_applicable_licenses: ["external_dtc_libfdt_license"],
+}
+
+cc_defaults {
+    name: "libfdt_defaults",
+    defaults: ["dtc_cflags_defaults"],
+    srcs: [
+        "fdt.c",
+        "fdt_check.c",
+        "fdt_ro.c",
+        "fdt_wip.c",
+        "fdt_sw.c",
+        "fdt_rw.c",
+        "fdt_strerror.c",
+        "fdt_empty_tree.c",
+        "fdt_addresses.c",
+        "fdt_overlay.c",
+        "acpi.c",
+    ],
+    export_include_dirs: ["."],
+    // b/336916369: This library gets linked into a rust rlib.  Disable LTO
+    // until cross-language lto is supported.
+    lto: {
+        never: true,
+    },
+}
+
+cc_library {
+    name: "libfdt",
+    host_supported: true,
+    defaults: ["libfdt_defaults"],
+    apex_available: [
+        "//apex_available:platform",
+        "com.android.virt",
+    ],
+}
+
+cc_library {
+    name: "libfdt_baremetal",
+    defaults: [
+        "cc_baremetal_defaults",
+        "libfdt_defaults",
+    ],
+}
