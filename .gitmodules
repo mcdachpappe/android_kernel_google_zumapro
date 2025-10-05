@@ -1,0 +1,4 @@
+[submodule "KernelSU"]
+	path = KernelSU
+	url = https://github.com/mcdachpappe/KernelSU.git
+	branch = 12851-mcd
